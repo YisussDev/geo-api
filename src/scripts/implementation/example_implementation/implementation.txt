@@ -1,0 +1,63 @@
+import { {{nameModule}}Repository } from "@domain-repositories/{{nameSecondModule}}/{{nameSecondModule}}.repository";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { {{nameModule}}Mapper } from "../../mapper/{{nameSecondModule}}/{{nameSecondModule}}.mapper";
+import { FilterInterface } from "@core-interfaces/filter/filter.interface";
+import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
+import { {{nameModule}}CreateDto, {{nameModule}}Entity } from "@domain-entities/{{nameSecondModule}}/{{nameSecondModule}}.entity";
+import { constructQuery } from "@core-helpers/query/queries.helper";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityRepository } from "@mikro-orm/core";
+
+@Injectable()
+export class {{nameModule}}Implementation implements {{nameModule}}Repository {
+
+
+  private mapper = new {{nameModule}}Mapper();
+
+  constructor(
+    @InjectRepository({{nameModule}}Entity) private readonly repository: EntityRepository<{{nameModule}}Entity>
+  ) {
+  }
+
+  public async getAll(filter: FilterInterface, page?: number | null): Promise<HttpResponseInterface<{{nameModule}}Entity>> {
+
+    const queryConstruct = constructQuery(filter.singleQueries);
+
+    let response: HttpResponseInterface<{{nameModule}}Entity> = {
+      data: []
+    };
+
+    const data = await this.repository.find(queryConstruct);
+    response = {
+      data: data
+    };
+
+    return response;
+  }
+
+  public async create(data: {{nameModule}}CreateDto): Promise<{ data: {{nameModule}}Entity }> {
+
+    const newObject = this.repository.create(data);
+    await this.repository.insert(newObject);
+
+    return {
+      data: newObject
+    };
+  }
+
+  public async deleteOne(id: string): Promise<{ data: {{nameModule}}Entity }> {
+
+    const object = await this.repository.findOne(Number(id));
+
+    if (!object) {
+      throw new NotFoundException(`{{nameModule}} with id ${id} not found`);
+    }
+    await this.repository.nativeDelete(object);
+
+    return {
+      data: object
+    };
+
+  }
+
+}

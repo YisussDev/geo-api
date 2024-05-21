@@ -1,0 +1,33 @@
+import { Injectable } from "@nestjs/common";
+import { {{nameModule}}Repository } from "@domain-repositories/{{nameSecondModule}}/{{nameSecondModule}}.repository";
+import { {{nameModule}}Implementation } from "../../../../infrastructure/adapters/db/implementation/{{nameSecondModule}}/{{nameSecondModule}}.implementation";
+import { FilterInterface } from "@core-interfaces/filter/filter.interface";
+import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
+import { {{nameModule}}CreateDto, {{nameModule}}Entity } from "@domain-entities/{{nameSecondModule}}/{{nameSecondModule}}.entity";
+
+@Injectable()
+export class {{nameModule}}UseCaseService implements {{nameModule}}Repository {
+
+
+  constructor(
+    private implementation: {{nameModule}}Implementation
+  ) {
+  }
+
+  public getAll(filter: FilterInterface, page?: number | null): Promise<HttpResponseInterface<{{nameModule}}Entity>> {
+    return this.implementation.getAll(filter, page);
+  }
+
+  public create(data: {{nameModule}}CreateDto): Promise<{ data: {{nameModule}}Entity }> {
+    return this.implementation.create(data);
+  }
+
+  public updateOne(id: string, data: {{nameModule}}Entity): Promise<{ data: {{nameModule}}Entity }> {
+    return this.implementation.updateOne(id, data);
+  }
+
+  public deleteOne(id: string): Promise<{ data: {{nameModule}}Entity }> {
+    return this.implementation.deleteOne(id);
+  }
+
+}

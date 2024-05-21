@@ -1,0 +1,56 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "paths": {
+      "@core-interfaces/*": [
+        "src/core/interfaces/*"
+      ],
+      "@core-models/*": [
+        "src/core/models/*"
+      ],
+      "@core-services/*": [
+        "src/core/services/*"
+      ],
+      "@core-helpers/*": [
+        "src/core/helpers/*"
+      ],
+      "@core-guard/*": [
+        "src/core/guard/*"
+      ],
+      "@application-use-cases/*": [
+        "src/application/use-cases/*"
+      ],
+      "@domain-entities/*": [
+        "src/domain/entities/*"
+      ],
+      "@domain-repositories/*": [
+        "src/domain/repositories/*"
+      ],
+      "@infrastructure-adapters-api-implementation/*": [
+        "src/infrastructure/adapters/api/implementation/*"
+      ],
+      "@infrastructure-adapters-api-mapper/*": [
+        "src/infrastructure/adapters/api/mapper/*"
+      ],
+      "@infrastructure-adapters-api-models/*": [
+        "src/infrastructure/adapters/api/models/*"
+      ]
+    },
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
+  }
+}

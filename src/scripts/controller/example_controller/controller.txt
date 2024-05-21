@@ -1,0 +1,47 @@
+import { Headers, Body, Controller, Delete, Get, Param, Post, Patch, Req } from "@nestjs/common";
+import { {{nameModule}}UseCaseService } from "@application-use-cases/{{nameSecondModule}}/{{nameSecondModule}}/{{nameSecondModule}}-use-case.service";
+import { {{nameModule}}CreateDto, {{nameModule}}Entity } from "@domain-entities/{{nameSecondModule}}/{{nameSecondModule}}.entity";
+import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
+import { FilterInterface } from "@core-interfaces/filter/filter.interface";
+
+@Controller("{{nameSecondModule}}")
+export class {{nameModule}}Controller {
+
+  constructor(
+    private useCases: {{nameModule}}UseCaseService
+  ) {
+  }
+
+  @Get("")
+  public getAll(
+    @Headers() headers: any,
+    @Req() request: any
+  ): Promise<HttpResponseInterface<{{nameModule}}Entity>> {
+    let filter: FilterInterface = {};
+    if (headers["x-filter-model"]) filter = JSON.parse(headers["x-filter-model"]);
+    return this.useCases.getAll(filter, request.query.page);
+  }
+
+  @Post("")
+  public async create(
+    @Body() data: {{nameModule}}CreateDto
+  ): Promise<{ data: {{nameModule}}Entity }> {
+    return this.useCases.create(data);
+  }
+
+  @Patch(":id")
+  public async update(
+    @Param("id") id: string,
+    @Body() data: {{nameModule}}Entity
+  ): Promise<{ data: {{nameModule}}Entity }> {
+    return this.useCases.updateOne(id, data);
+  }
+
+  @Delete(":id")
+  public async delete(
+    @Param("id") id: string
+  ): Promise<{ data: {{nameModule}}Entity }> {
+    return this.useCases.deleteOne(id);
+  }
+
+}

@@ -1,0 +1,13 @@
+import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+
+@Entity({ tableName: "{{nameModule}}" })
+export class {{nameModule}}Entity {
+
+  @PrimaryKey({
+    autoincrement: true
+  })
+  id: number;
+
+}
+
+export class {{nameModule}}CreateDto {}

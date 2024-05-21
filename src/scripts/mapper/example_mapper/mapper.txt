@@ -1,0 +1,15 @@
+import { BaseMapperModel } from "@core-models/mapper/mapper.model";
+import { {{nameModule}}Entity } from "@domain-entities/{{nameSecondModule}}/{{nameSecondModule}}.entity";
+import { {{nameModule}}ApiEntity } from "../../models/{{nameSecondModule}}/{{nameSecondModule}}-api.model";
+
+export class {{nameModule}}Mapper extends BaseMapperModel<{{nameModule}}Entity, {{nameModule}}ApiEntity> {
+
+  public mapFrom(entityApi: {{nameModule}}ApiEntity): {{nameModule}}Entity {
+    return entityApi;
+  }
+
+  public mapTo(entityLocal: {{nameModule}}Entity): {{nameModule}}ApiEntity {
+    return entityLocal;
+  }
+
+}

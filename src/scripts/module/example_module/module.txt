@@ -1,0 +1,21 @@
+import { Module } from "@nestjs/common";
+import { {{nameModule}}Controller } from "./{{nameSecondModule}}.controller";
+import { {{nameModule}}Implementation } from "../../../../infrastructure/adapters/db/implementation/{{nameSecondModule}}/{{nameSecondModule}}.implementation";
+import { {{nameModule}}UseCaseService } from "@application-use-cases/{{nameSecondModule}}/{{nameSecondModule}}/{{nameSecondModule}}-use-case.service";
+import { MikroOrmModule } from "@mikro-orm/nestjs";
+import { {{nameModule}}Entity } from "@domain-entities/{{nameSecondModule}}/{{nameSecondModule}}.entity";
+
+@Module({
+  imports: [
+    MikroOrmModule.forFeature([{{nameModule}}Entity])
+  ],
+  controllers: [
+    {{nameModule}}Controller
+  ],
+  providers: [
+    {{nameModule}}Implementation,
+    {{nameModule}}UseCaseService,
+  ]
+})
+export class {{nameModule}}Module {
+}
