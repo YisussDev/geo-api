@@ -4,6 +4,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { MikroORM } from "@mikro-orm/core";
 import { HttpErrorInterceptor } from "./core/interceptors/http/http-error.interceptor";
 import * as express from "express";
+import * as process from "node:process";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,7 +23,7 @@ async function bootstrap() {
   await generator.updateSchema(); // O `await generator.createSchema();` para crear el esquema desde cero
 
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3002);
 }
 
 bootstrap();

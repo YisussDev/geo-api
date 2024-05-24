@@ -29,6 +29,8 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
+        host: configService.get<string>("HOST_DATABASE"),
+        port: configService.get<number>("PORT_DATABASE"),
         entities: ["dist/domain/entities/**/*.js"],
         entitiesTs: ["src/domain/entities/**/*.ts"],
         dbName: configService.get<string>("NAME_DATABASE"),
