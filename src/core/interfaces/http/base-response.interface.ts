@@ -5,7 +5,7 @@ export abstract class BaseHttpModel<Entity> {
 
   abstract getAll?(filter: FilterInterface): Promise<HttpResponseInterface<Entity>>;
 
-  abstract getOne?(filter: FilterInterface): Promise<HttpResponseInterface<Entity>>;
+  abstract getOne?(filter: FilterInterface): Promise<{ data: Entity }>;
 
   abstract create?(data: Entity): Promise<{ data: Entity }>;
 

@@ -7,8 +7,6 @@ export abstract class ActivityRepository implements BaseHttpModel<ActivityEntity
 
   abstract getAll?(filter: FilterInterface, page?: number): Promise<HttpResponseInterface<ActivityEntity>>;
 
-  abstract getOne?(filter: FilterInterface): Promise<HttpResponseInterface<ActivityEntity>>;
-
   abstract create?(data: ActivityCreateDto): Promise<{ data : ActivityEntity}>;
 
   abstract updateOne?(id: string, data: ActivityEntity): Promise<{ data : ActivityEntity}>;

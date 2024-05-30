@@ -4,18 +4,29 @@ import { {{nameModule}}Implementation } from "../../../../infrastructure/adapter
 import { {{nameModule}}UseCaseService } from "@application-use-cases/{{nameSecondModule}}/{{nameSecondModule}}/{{nameSecondModule}}-use-case.service";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { {{nameModule}}Entity } from "@domain-entities/{{nameSecondModule}}/{{nameSecondModule}}.entity";
+import { BcryptService } from "@core-services/bcrypt/bcryp.service";
+import { MikroQueryService } from "@core-services/mikro/mikro-queries.service";
+import { createAddNameMiddleware } from "../../../../core/middlewares/name-module.middleware";
+
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature([{{nameModule}}Entity])
+   MikroOrmModule.forFeature([{{nameModule}}Entity])
   ],
   controllers: [
-    {{nameModule}}Controller
+   {{nameModule}}Controller
   ],
   providers: [
-    {{nameModule}}Implementation,
-    {{nameModule}}UseCaseService,
+   BcryptService,
+   {{nameModule}}Implementation,
+   {{nameModule}}UseCaseService,
+   MikroQueryService
   ]
 })
 export class {{nameModule}}Module {
+configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(createAddNameMiddleware(""))
+      .forRoutes({{nameModule}}Controller);
+  }
 }

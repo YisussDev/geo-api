@@ -5,11 +5,11 @@ import { CourseApiEntity } from "../../models/course/course-api.model";
 export class CourseMapper extends BaseMapperModel<CourseEntity, CourseApiEntity> {
 
   public mapFrom(entityApi: CourseApiEntity): CourseEntity {
-    return entityApi;
+    return entityApi as any;
   }
 
   public mapTo(entityLocal: CourseEntity): CourseApiEntity {
-    return entityLocal;
+    return entityLocal as any;
   }
 
 }

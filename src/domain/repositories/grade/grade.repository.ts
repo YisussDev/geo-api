@@ -7,8 +7,6 @@ export abstract class GradeRepository implements BaseHttpModel<GradeEntity> {
 
   abstract getAll?(filter: FilterInterface, page?: number): Promise<HttpResponseInterface<GradeEntity>>;
 
-  abstract getOne?(filter: FilterInterface): Promise<HttpResponseInterface<GradeEntity>>;
-
   abstract create?(data: GradeCreateDto): Promise<{ data : GradeEntity}>;
 
   abstract updateOne?(id: string, data: GradeEntity): Promise<{ data : GradeEntity}>;

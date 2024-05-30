@@ -6,7 +6,6 @@ import {
 import { FilterInterface } from "@core-interfaces/filter/filter.interface";
 import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
 import { StudentCreateDto, StudentEntity } from "@domain-entities/student/student.entity";
-import { CourseEntity } from "@domain-entities/course/course.entity";
 
 @Injectable()
 export class StudentUseCaseService implements StudentRepository {
@@ -21,7 +20,7 @@ export class StudentUseCaseService implements StudentRepository {
     return this.implementation.getAll(filter, page);
   }
 
-  public registerStudentInCourse(studentId: number, courseId: number): Promise<StudentEntity> {
+  public registerStudentInCourse(studentId: number, courseId: number): Promise<{ data: StudentEntity }> {
     return this.implementation.registerStudentInCourse(studentId, courseId);
   }
 
@@ -31,6 +30,10 @@ export class StudentUseCaseService implements StudentRepository {
 
   public deleteOne(id: string): Promise<{ data: StudentEntity }> {
     return this.implementation.deleteOne(id);
+  }
+
+  public getOne(filter: FilterInterface): Promise<{ data: StudentEntity }> {
+    return this.implementation.getOne(filter);
   }
 
 }

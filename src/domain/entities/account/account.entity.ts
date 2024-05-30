@@ -1,6 +1,7 @@
 import { Entity, Enum, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { StudentEntity } from "@domain-entities/student/student.entity";
 import { IsString } from "class-validator";
+import { Exclude, Expose, Type } from "class-transformer";
 
 @Entity({ tableName: "Account" })
 export class AccountEntity {
@@ -51,9 +52,9 @@ export class AccountEntity {
   img_64: Record<string, any>;
 
   @Enum(() => AccountStatus)
-  status: 'ACTIVE' | 'INACTIVE';
+  status: "ACTIVE" | "INACTIVE";
 
-  @Property({type: 'tinyint'})
+  @Property({ type: "tinyint" })
   validated: 0 | 1;
 
 }
@@ -111,4 +112,72 @@ export enum AccountStatus {
 export enum DocumentType {
   CC = "CC",
   NIT = "NIT",
+}
+
+export class AccountResponseDto {
+
+  @Expose()
+  id: number;
+
+  @Expose()
+  document_type: number;
+
+  @Expose()
+  document_number: number;
+
+  @Expose()
+  first_name: string;
+
+  @Expose()
+  last_name: string;
+
+  @Expose()
+  first_surname: string;
+
+  @Expose()
+  last_surname: string;
+
+  @Expose()
+  email: string;
+
+  @Expose()
+  birthdate: string;
+
+  @Exclude()
+  password: string;
+
+  @Expose()
+  rol: string;
+
+  @Expose()
+  student: StudentEntity;
+
+  @Expose()
+  created_at!: Date;
+
+  @Expose()
+  updated_at!: Date;
+
+  @Exclude()
+  img_64: Record<string, any>;
+
+  @Expose()
+  status: "ACTIVE" | "INACTIVE";
+
+  @Expose()
+  validated: 0 | 1;
+
+}
+
+export class AccountPaginateResponseDto {
+  @Expose()
+  @Type(() => AccountResponseDto)
+  data: AccountResponseDto[];
+
+  @Expose()
+  links: any;
+
+  @Expose()
+  meta: any;
+
 }

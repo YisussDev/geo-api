@@ -28,15 +28,19 @@ export class ModuleGuard implements CanActivate {
 
   private validateActionModuleAccount(account: AccountEntity, nameModule: string, nameAction: string): boolean {
 
+    console.log(nameModule, modulesDictionaries[nameModule]);
+
     let isValid: boolean = false;
 
     const rolAccount: AccountEntity["rol"] = account.rol;
 
-    if (modulesDictionaries[nameModule] && modulesDictionaries[nameModule]['ACTIONS'][nameAction]) {
-      for (const rolAllowed of modulesDictionaries[nameModule]['ACTIONS'][nameAction]["rolAllowed"]) {
+    if (modulesDictionaries[nameModule] && modulesDictionaries[nameModule][nameAction]) {
+      for (const rolAllowed of modulesDictionaries[nameModule][nameAction]["rolAllowed"]) {
         if (rolAccount == rolAllowed) isValid = true;
       }
     }
+
+    console.log(isValid);
 
     return isValid;
   }

@@ -7,8 +7,6 @@ export abstract class StudentRepository implements BaseHttpModel<StudentEntity> 
 
   abstract getAll?(filter: FilterInterface, page?: number): Promise<HttpResponseInterface<StudentEntity>>;
 
-  abstract getOne?(filter: FilterInterface): Promise<HttpResponseInterface<StudentEntity>>;
-
   abstract create?(data: StudentCreateDto): Promise<{ data : StudentEntity}>;
 
   abstract updateOne?(id: string, data: StudentEntity): Promise<{ data : StudentEntity}>;

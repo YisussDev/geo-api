@@ -4,7 +4,6 @@ import { AccountMapper } from "../../mapper/account/account.mapper";
 import { FilterInterface } from "@core-interfaces/filter/filter.interface";
 import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
 import { AccountCreateDto, AccountEntity } from "@domain-entities/account/account.entity";
-import { constructQuery } from "@core-helpers/query/queries.helper";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { StudentEntity } from "@domain-entities/student/student.entity";
@@ -21,8 +20,8 @@ export class AccountImplementation implements AccountRepository {
   private mapper = new AccountMapper();
 
   constructor(
-    private jwtService: JwtService,
     @InjectRepository(AccountEntity) private readonly repository: EntityRepository<AccountEntity>,
+    private jwtService: JwtService,
     private readonly em: EntityManager,
     private bcryptService: BcryptService,
     private mikroQueryService: MikroQueryService
@@ -35,13 +34,41 @@ export class AccountImplementation implements AccountRepository {
         data: await this.repository.find({}, { populate: ["student"] })
       };
     } else {
-      return await this.mikroQueryService.constructResponseWithFilter<AccountEntity>(this.repository, filter, page, { relations: ["student"] });
+      return await this.mikroQueryService.constructResponseWithFilter<AccountEntity>(this.repository, filter, page);
     }
+  }
+
+  public async getOne(filter: FilterInterface): Promise<{ data: AccountEntity }> {
+
+    if (!filter || !filter["singleQueries"]) throw new BadRequestException(`Bad filter or petition.`);
+
+    let queries: string[][] = filter["singleQueries"];
+
+    let relations = filter["relations"];
+
+    let queriesToFilter = {};
+
+    let options = {};
+
+    for (let query of queries) {
+      queriesToFilter[query[0]] = query[2];
+    }
+
+    if (relations) options["populate"] = relations;
+
+    const account = await this.em.findOne(AccountEntity, queriesToFilter, options);
+
+    if (!account) throw new BadRequestException(`Account not exist`);
+
+    return {
+      data: account
+    };
+
   }
 
   public async create(data: AccountCreateDto): Promise<{ data: AccountEntity }> {
 
-    const actions = this.moduleAccountDictionaries['ACTIONS'];
+    const actions = this.moduleAccountDictionaries["ACTIONS"];
 
     const newObject = this.repository.create(data);
     await this.repository.insert(newObject);
@@ -101,6 +128,20 @@ export class AccountImplementation implements AccountRepository {
     } else {
       // @ts-ignore
       this.repository.assign(account, data);
+      await this.em.flush();
+      return {
+        data: account
+      };
+    }
+  }
+
+  public async validateAccountRegister(id: string): Promise<{ data: AccountEntity }> {
+    const account = await this.repository.findOne({ id: Number(id) });
+    if (!account) {
+      throw new Error("Account not found");
+    } else {
+      // @ts-ignore
+      this.repository.assign(account, { validated: 1 });
       await this.em.flush();
       return {
         data: account
@@ -176,6 +217,25 @@ export class AccountImplementation implements AccountRepository {
 
     } else {
       throw new BadRequestException(`Account with email ${data.email} not found or credential invalid.`);
+    }
+
+  }
+
+  public async activateOrDeactivateAccount(id: string): Promise<{ data: AccountEntity }> {
+
+    const account = await this.repository.findOne({ id: Number(id) }, { populate: ["student"] });
+    if (!account) {
+      throw new Error("Account not found");
+    } else {
+      if (account.status == "ACTIVE") {
+        this.repository.assign(account, { status: "INACTIVE" });
+      } else {
+        this.repository.assign(account, { status: "ACTIVE" });
+      }
+      await this.em.flush();
+      return {
+        data: account
+      };
     }
 
   }

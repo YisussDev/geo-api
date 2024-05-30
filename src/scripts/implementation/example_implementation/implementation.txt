@@ -6,7 +6,10 @@ import { HttpResponseInterface } from "@core-interfaces/http/http-response.inter
 import { {{nameModule}}CreateDto, {{nameModule}}Entity } from "@domain-entities/{{nameSecondModule}}/{{nameSecondModule}}.entity";
 import { constructQuery } from "@core-helpers/query/queries.helper";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/core";
+import { EntityManager, EntityRepository } from "@mikro-orm/core";
+import { BcryptService } from "@core-services/bcrypt/bcryp.service";
+import { JwtService } from "@nestjs/jwt";
+import { MikroQueryService } from "@core-services/mikro/mikro-queries.service";
 
 @Injectable()
 export class {{nameModule}}Implementation implements {{nameModule}}Repository {
@@ -15,24 +18,22 @@ export class {{nameModule}}Implementation implements {{nameModule}}Repository {
   private mapper = new {{nameModule}}Mapper();
 
   constructor(
+    private jwtService: JwtService,
     @InjectRepository({{nameModule}}Entity) private readonly repository: EntityRepository<{{nameModule}}Entity>
+    private readonly em: EntityManager,
+    private bcryptService: BcryptService,
+    private mikroQueryService: MikroQueryService
   ) {
   }
 
   public async getAll(filter: FilterInterface, page?: number | null): Promise<HttpResponseInterface<{{nameModule}}Entity>> {
-
-    const queryConstruct = constructQuery(filter.singleQueries);
-
-    let response: HttpResponseInterface<{{nameModule}}Entity> = {
-      data: []
-    };
-
-    const data = await this.repository.find(queryConstruct);
-    response = {
-      data: data
-    };
-
-    return response;
+    if (!filter) {
+          return {
+            data: await this.repository.find({}, { populate: [] })
+          };
+        } else {
+          return await this.mikroQueryService.constructResponseWithFilter<{{nameModule}}Entity>(this.repository, filter, page);
+        }
   }
 
   public async create(data: {{nameModule}}CreateDto): Promise<{ data: {{nameModule}}Entity }> {

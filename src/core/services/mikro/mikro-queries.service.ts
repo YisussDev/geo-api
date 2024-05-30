@@ -52,10 +52,7 @@ export class MikroQueryService {
   public async constructResponseWithFilter<Entity>(
     repository: EntityRepository<any>,
     filter: FilterInterface,
-    page: number = 1,
-    config: {
-      relations: (keyof Entity)[] | [];
-    }
+    page: number = 1
   ): Promise<HttpResponseInterface<Entity>> {
 
     let dataToReturn: Entity[];
@@ -64,9 +61,17 @@ export class MikroQueryService {
 
     let totalRegisterFound: number = 0;
 
-    let options: any = {
-      populate: config["relations"]
-    };
+    let columnsSelected: string[] = filter["selectColumns"];
+
+    let relations = filter["relations"];
+
+    let fields = filter["fields"];
+
+    let options: any = {};
+
+    if (relations) options["populate"] = relations;
+
+    if (fields) options["fields"] = fields;
 
     if (paginate && paginate > 0) {
       options["limit"] = paginate;
@@ -80,7 +85,7 @@ export class MikroQueryService {
       totalRegisterFound = await repository.find({ ...queryBuilt, $or: queryOrBuilt }).then(res => res.length);
     } else {
       dataToReturn = await repository.find({}, options);
-      totalRegisterFound = await repository.find({}, { populate: config["relations"] as any }).then(res => res.length);
+      totalRegisterFound = await repository.find({}).then(res => res.length);
     }
 
     const response: HttpResponseInterface<Entity> = {

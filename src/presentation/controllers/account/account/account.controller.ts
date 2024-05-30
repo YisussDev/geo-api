@@ -12,13 +12,19 @@ import {
   UseGuards
 } from "@nestjs/common";
 import { AccountUseCaseService } from "@application-use-cases/account/account/account-use-case.service";
-import { AccountCreateDto, AccountEntity, AccountLoginDto } from "@domain-entities/account/account.entity";
+import {
+  AccountCreateDto,
+  AccountEntity,
+  AccountLoginDto, AccountPaginateResponseDto,
+  AccountResponseDto
+} from "@domain-entities/account/account.entity";
 import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
 import { FilterInterface } from "@core-interfaces/filter/filter.interface";
 import { AuthGuard } from "../../../../core/guards/auth/auth.guard";
 import { ModuleGuard } from "../../../../core/guards/module/module.guard";
 import { ActionName } from "../../../../core/decorators/name-action.decorator";
 import { ValidationGuard } from "../../../../core/guards/validation/validation.guard";
+import { Serialize } from "../../../../core/decorators/serialize.decorator";
 
 @Controller("account")
 export class AccountController {
@@ -47,6 +53,9 @@ export class AccountController {
     return this.useCases.validateToken(token);
   }
 
+  @ActionName("LIST_ALL")
+  @UseGuards(AuthGuard, ModuleGuard, ValidationGuard)
+  @Serialize(AccountPaginateResponseDto)
   @Get("")
   public getAll(
     @Req() request: any,
@@ -55,6 +64,17 @@ export class AccountController {
     let filterJson: string | undefined = headers["x-filter-model"];
     let filter: FilterInterface = filterJson && JSON.parse(filterJson);
     return this.useCases.getAll(filter, request.query.page);
+  }
+
+  @Get("search")
+  public getOne(
+    @Req() request: any,
+    @Headers() headers: any,
+    @Param("id") id: string
+  ): Promise<{ data: AccountEntity }> {
+    let filterJson: string | undefined = headers["x-filter-model"];
+    let filter: FilterInterface = filterJson && JSON.parse(filterJson);
+    return this.useCases.getOne(filter);
   }
 
   @Post("")
@@ -73,7 +93,7 @@ export class AccountController {
     return this.useCases.createAccountStudent(data);
   }
 
-  @ActionName('CREATE_ADMIN')
+  @ActionName("CREATE_ADMIN")
   @UseGuards(AuthGuard, ModuleGuard, ValidationGuard)
   @Post("admin")
   public async createAccountAdmin(
@@ -83,7 +103,7 @@ export class AccountController {
     return this.useCases.createAccountAdmin(data);
   }
 
-  @ActionName('DELETE')
+  @ActionName("DELETE")
   @UseGuards(AuthGuard, ModuleGuard, ValidationGuard)
   @Delete(":id")
   public async delete(
@@ -93,7 +113,7 @@ export class AccountController {
     return this.useCases.deleteOne(id);
   }
 
-  @ActionName('UPDATE')
+  @ActionName("UPDATE_ACCOUNT")
   @UseGuards(AuthGuard, ModuleGuard, ValidationGuard)
   @Patch(":id")
   public async update(
@@ -103,5 +123,24 @@ export class AccountController {
   ): Promise<{ data: AccountEntity }> {
     return this.useCases.updateOne(id, data);
   }
+
+  @ActionName("VALIDATE_REGISTER")
+  @UseGuards(AuthGuard, ModuleGuard, ValidationGuard)
+  @Get("validate-register/:id")
+  public async validateAccountRegister(
+    @Param("id") id: string
+  ): Promise<{ data: AccountEntity }> {
+    return this.useCases.validateAccountRegister(id);
+  }
+
+  @ActionName("ACTIVE_OR_INACTIVE")
+  @UseGuards(AuthGuard, ModuleGuard, ValidationGuard)
+  @Get("act-deact/:id")
+  public async activateOrDeactivateAccount(
+    @Param("id") id: string
+  ): Promise<{ data: AccountEntity }> {
+    return this.useCases.activateOrDeactivateAccount(id);
+  }
+
 
 }

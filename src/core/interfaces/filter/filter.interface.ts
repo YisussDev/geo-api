@@ -3,5 +3,7 @@ export interface FilterInterface {
   singleQuery?: string[];
   singleQueries?: string[][];
   orSingleQueries?: string[][];
+  relations?: string[];
+  fields?: string[];
   paginate?: number;
 }

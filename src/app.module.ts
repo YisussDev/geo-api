@@ -12,6 +12,7 @@ import { WinstonModule } from "nest-winston";
 import * as winston from "winston";
 import { LoggingInterceptor } from "./core/interceptors/logger/logging.interceptor";
 import { APP_INTERCEPTOR } from "@nestjs/core";
+import { EnrollmentModule } from "./presentation/controllers/enrollment/enrollment/enrollment.module";
 
 
 @Module({
@@ -72,7 +73,8 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
     StudentModule,
     CourseModule,
     GradeModule,
-    ActivityModule
+    ActivityModule,
+    EnrollmentModule
   ],
   controllers: [],
   providers: [

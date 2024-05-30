@@ -5,7 +5,8 @@ import {
 } from "../../../../infrastructure/adapters/db/implementation/account/account.implementation";
 import { FilterInterface } from "@core-interfaces/filter/filter.interface";
 import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
-import { AccountCreateDto, AccountEntity } from "@domain-entities/account/account.entity";
+import { AccountCreateDto, AccountEntity, AccountResponseDto } from "@domain-entities/account/account.entity";
+import { Serialize } from "../../../../core/decorators/serialize.decorator";
 
 @Injectable()
 export class AccountUseCaseService implements AccountRepository {
@@ -17,7 +18,12 @@ export class AccountUseCaseService implements AccountRepository {
   }
 
   public getAll(filter?: FilterInterface, page?: number | null): Promise<HttpResponseInterface<AccountEntity>> {
+
     return this.implementation.getAll(filter, page);
+  }
+
+  public getOne(filter: FilterInterface): Promise<{ data: AccountEntity }> {
+    return this.implementation.getOne(filter);
   }
 
   public create(data: AccountCreateDto): Promise<{ data: AccountEntity }> {
@@ -50,6 +56,14 @@ export class AccountUseCaseService implements AccountRepository {
 
   public validateAccount(data: AccountEntity): Promise<AccountEntity> {
     return this.implementation.validateAccount(data);
+  }
+
+  public validateAccountRegister(id: string): Promise<{ data: AccountEntity }> {
+    return this.implementation.validateAccountRegister(id);
+  }
+
+  public activateOrDeactivateAccount(id: string): Promise<{ data: AccountEntity }> {
+    return this.implementation.activateOrDeactivateAccount(id);
   }
 
 }

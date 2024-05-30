@@ -7,8 +7,6 @@ export abstract class CourseRepository implements BaseHttpModel<CourseEntity> {
 
   abstract getAll?(filter: FilterInterface, page?: number): Promise<HttpResponseInterface<CourseEntity>>;
 
-  abstract getOne?(filter: FilterInterface): Promise<HttpResponseInterface<CourseEntity>>;
-
   abstract create?(data: CourseCreateDto): Promise<{ data : CourseEntity}>;
 
   abstract updateOne?(id: string, data: CourseEntity): Promise<{ data : CourseEntity}>;

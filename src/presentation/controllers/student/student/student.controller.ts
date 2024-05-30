@@ -1,9 +1,8 @@
-import { Headers, Body, Controller, Delete, Get, Param, Post, Patch, Req } from "@nestjs/common";
+import { Headers, Controller, Get, Param, Post, Req } from "@nestjs/common";
 import { StudentUseCaseService } from "@application-use-cases/student/student/student-use-case.service";
-import { StudentCreateDto, StudentEntity } from "@domain-entities/student/student.entity";
+import { StudentEntity } from "@domain-entities/student/student.entity";
 import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
 import { FilterInterface } from "@core-interfaces/filter/filter.interface";
-import { CourseEntity } from "@domain-entities/course/course.entity";
 
 @Controller("student")
 export class StudentController {
@@ -12,6 +11,7 @@ export class StudentController {
     private useCases: StudentUseCaseService
   ) {
   }
+
 
   @Get("")
   public getAll(
@@ -23,26 +23,21 @@ export class StudentController {
     return this.useCases.getAll(filter, request.query.page);
   }
 
-  @Post("")
-  public async create(
-    @Body() data: StudentCreateDto
+  @Get("search")
+  public getOne(
+    @Headers() headers: any,
   ): Promise<{ data: StudentEntity }> {
-    return this.useCases.create(data);
+    let filterJson: string | undefined = headers["x-filter-model"];
+    let filter: FilterInterface = filterJson && JSON.parse(filterJson);
+    return this.useCases.getOne(filter);
   }
 
-  @Post(":studentId/course/:courseId")
+  @Get(":studentId/course/:courseId")
   public async registerStudentInCourse(
     @Param("studentId") studentId: string,
     @Param("courseId") courseId: string
-  ): Promise<StudentEntity> {
-    return this.useCases.registerStudentInCourse(Number(studentId), Number(courseId));
-  }
-
-  @Delete(":id")
-  public async delete(
-    @Param("id") id: string
   ): Promise<{ data: StudentEntity }> {
-    return this.useCases.deleteOne(id);
+    return this.useCases.registerStudentInCourse(Number(studentId), Number(courseId));
   }
 
 }
