@@ -1,4 +1,4 @@
-version: "2.0"
+version: "3.0"  # Puedes cambiar la versión según tus necesidades
 
 services:
   postgres:
@@ -11,6 +11,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -31,3 +32,7 @@ services:
       NAME_DATABASE: postgres
       SECRET_KEY: shgzjxd
       JWT_EXPIRATION_TIME: 2h
+
+volumes:
+  postgres_data:
+    driver: local
