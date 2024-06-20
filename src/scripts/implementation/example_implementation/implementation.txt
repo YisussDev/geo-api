@@ -19,7 +19,7 @@ export class {{nameModule}}Implementation implements {{nameModule}}Repository {
 
   constructor(
     private jwtService: JwtService,
-    @InjectRepository({{nameModule}}Entity) private readonly repository: EntityRepository<{{nameModule}}Entity>
+    @InjectRepository({{nameModule}}Entity) private readonly repository: EntityRepository<{{nameModule}}Entity>,
     private readonly em: EntityManager,
     private bcryptService: BcryptService,
     private mikroQueryService: MikroQueryService
@@ -45,6 +45,20 @@ export class {{nameModule}}Implementation implements {{nameModule}}Repository {
       data: newObject
     };
   }
+
+  public async updateOne(id: string, data: {{nameModule}}Entity): Promise<{ data: {{nameModule}}Entity }> {
+      const register = await this.repository.findOne({ id: Number(id) });
+      if (!register) {
+        throw new Error("{{nameModule}} not found");
+      } else {
+        // @ts-ignore
+        this.repository.assign(register, data);
+        await this.em.flush();
+        return {
+          data: register
+        };
+      }
+    }
 
   public async deleteOne(id: string): Promise<{ data: {{nameModule}}Entity }> {
 

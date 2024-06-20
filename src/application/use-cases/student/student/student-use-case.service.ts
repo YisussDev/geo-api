@@ -24,6 +24,10 @@ export class StudentUseCaseService implements StudentRepository {
     return this.implementation.registerStudentInCourse(studentId, courseId);
   }
 
+  public removeStudentInCourse(studentId: number, courseId: number): Promise<{ data: StudentEntity }> {
+    return this.implementation.removeStudentInCourse(studentId, courseId);
+  }
+
   public create(data: StudentCreateDto): Promise<{ data: StudentEntity }> {
     return this.implementation.create(data);
   }

@@ -1,12 +1,13 @@
 import { ActivityRepository } from "@domain-repositories/activity/activity.repository";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { ActivityMapper } from "../../mapper/activity/activity.mapper";
 import { FilterInterface } from "@core-interfaces/filter/filter.interface";
 import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
 import { ActivityCreateDto, ActivityEntity } from "@domain-entities/activity/activity.entity";
-import { constructQuery } from "@core-helpers/query/queries.helper";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/core";
+import { EntityManager, EntityRepository } from "@mikro-orm/core";
+import { JwtService } from "@nestjs/jwt";
+import { MikroQueryService } from "@core-services/mikro/mikro-queries.service";
 
 @Injectable()
 export class ActivityImplementation implements ActivityRepository {
@@ -15,24 +16,49 @@ export class ActivityImplementation implements ActivityRepository {
   private mapper = new ActivityMapper();
 
   constructor(
-    @InjectRepository(ActivityEntity) private readonly repository: EntityRepository<ActivityEntity>
+    @InjectRepository(ActivityEntity) private readonly repository: EntityRepository<ActivityEntity>,
+    private jwtService: JwtService,
+    private readonly em: EntityManager,
+    private mikroQueryService: MikroQueryService
   ) {
   }
 
-  public async getAll(filter: FilterInterface, page?: number | null): Promise<HttpResponseInterface<ActivityEntity>> {
+  public async getAll(filter?: FilterInterface, page?: number | null): Promise<HttpResponseInterface<ActivityEntity>> {
+    if (!filter) {
+      return {
+        data: await this.repository.find({}, { populate: ["activities_courses"] })
+      };
+    } else {
+      return await this.mikroQueryService.constructResponseWithFilter<ActivityEntity>(this.repository, filter, page);
+    }
+  }
 
-    const queryConstruct = constructQuery(filter.singleQueries);
+  public async getOne(filter: FilterInterface): Promise<{ data: ActivityEntity }> {
 
-    let response: HttpResponseInterface<ActivityEntity> = {
-      data: []
+    if (!filter || !filter["singleQueries"]) throw new BadRequestException(`Bad filter or petition.`);
+
+    let queries: string[][] = filter["singleQueries"];
+
+    let relations = filter["relations"];
+
+    let queriesToFilter = {};
+
+    let options = {};
+
+    for (let query of queries) {
+      queriesToFilter[query[0]] = query[2];
+    }
+
+    if (relations) options["populate"] = relations;
+
+    const activity = await this.em.findOne(ActivityEntity, queriesToFilter, options);
+
+    if (!activity) throw new BadRequestException(`Activity not exist`);
+
+    return {
+      data: activity
     };
 
-    const data = await this.repository.find(queryConstruct);
-    response = {
-      data: data
-    };
-
-    return response;
   }
 
   public async create(data: ActivityCreateDto): Promise<{ data: ActivityEntity }> {
@@ -43,6 +69,20 @@ export class ActivityImplementation implements ActivityRepository {
     return {
       data: newObject
     };
+  }
+
+  public async updateOne(id: string, data: ActivityEntity): Promise<{ data: ActivityEntity }> {
+    const activity = await this.repository.findOne({ id: Number(id) });
+    if (!activity) {
+      throw new Error("Activity not found");
+    } else {
+      // @ts-ignore
+      this.repository.assign(activity, data);
+      await this.em.flush();
+      return {
+        data: activity
+      };
+    }
   }
 
   public async deleteOne(id: string): Promise<{ data: ActivityEntity }> {

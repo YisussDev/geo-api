@@ -28,8 +28,6 @@ export class ModuleGuard implements CanActivate {
 
   private validateActionModuleAccount(account: AccountEntity, nameModule: string, nameAction: string): boolean {
 
-    console.log(nameModule, modulesDictionaries[nameModule]);
-
     let isValid: boolean = false;
 
     const rolAccount: AccountEntity["rol"] = account.rol;
@@ -39,8 +37,6 @@ export class ModuleGuard implements CanActivate {
         if (rolAccount == rolAllowed) isValid = true;
       }
     }
-
-    console.log(isValid);
 
     return isValid;
   }

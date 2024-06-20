@@ -1,19 +1,31 @@
-import { CourseEntity } from "@domain-entities/course/course.entity";
+import { ActivityCourseEntity } from "@domain-entities/activity-course/activity-course.entity";
 
 export interface ActivityApiEntity {
 
   id: number;
 
-  activityName: string;
+  title: string;
 
-  activityDescription: string;
+  description: string;
 
-  activityDate: Date;
+  type_receivable: "DOCUMENT" | "TEST" | "NORMAL" | null;
 
-  course: CourseEntity;
+  type_qualification: "SCORE" | "NORMAL";
 
-  grades: any;
+  score_accept: number;
 
-  students: any;
+  config_test: JSON | string | null;
+
+  config_doc: JSON | string | null;
+
+  sections: JSON | string | null;
+
+  material_help: JSON | string | null;
+
+  activities_courses: any;
+
+  created_at: Date;
+
+  updated_at: Date;
 
 }

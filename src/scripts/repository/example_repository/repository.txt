@@ -7,7 +7,7 @@ export abstract class {{nameModule}}Repository implements BaseHttpModel<{{nameMo
 
   abstract getAll?(filter: FilterInterface, page?: number): Promise<HttpResponseInterface<{{nameModule}}Entity>>;
 
-  abstract getOne?(filter: FilterInterface): Promise<HttpResponseInterface<{{nameModule}}Entity>>;
+  abstract getOne?(filter: FilterInterface): Promise<{ data: {{nameModule}}Entity }>;
 
   abstract create?(data: {{nameModule}}CreateDto): Promise<{ data : {{nameModule}}Entity}>;
 

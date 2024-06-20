@@ -11,6 +11,4 @@ export interface GradeApiEntity {
 
   student: StudentEntity;
 
-  activity: ActivityEntity;
-
 }

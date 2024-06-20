@@ -13,9 +13,6 @@ export class StudentEntity {
   @OneToMany(() => GradeEntity, grade => grade.student)
   grades = new Collection<GradeEntity>(this);
 
-  @ManyToMany(() => ActivityEntity, activity => activity.students, { owner: true })
-  activities = new Collection<ActivityEntity>(this);
-
   @OneToOne(() => AccountEntity, { nullable: true })
   account: AccountEntity;
 

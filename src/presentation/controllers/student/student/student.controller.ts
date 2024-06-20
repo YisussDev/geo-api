@@ -25,7 +25,7 @@ export class StudentController {
 
   @Get("search")
   public getOne(
-    @Headers() headers: any,
+    @Headers() headers: any
   ): Promise<{ data: StudentEntity }> {
     let filterJson: string | undefined = headers["x-filter-model"];
     let filter: FilterInterface = filterJson && JSON.parse(filterJson);
@@ -38,6 +38,14 @@ export class StudentController {
     @Param("courseId") courseId: string
   ): Promise<{ data: StudentEntity }> {
     return this.useCases.registerStudentInCourse(Number(studentId), Number(courseId));
+  }
+
+  @Get(":studentId/course/:courseId/remove")
+  public async removeStudentInCourse(
+    @Param("studentId") studentId: string,
+    @Param("courseId") courseId: string
+  ): Promise<{ data: StudentEntity }> {
+    return this.useCases.removeStudentInCourse(Number(studentId), Number(courseId));
   }
 
 }

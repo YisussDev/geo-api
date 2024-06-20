@@ -1,7 +1,6 @@
-import { Collection, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
-import { CourseEntity } from "@domain-entities/course/course.entity";
-import { GradeEntity } from "@domain-entities/grade/grade.entity";
-import { StudentEntity } from "@domain-entities/student/student.entity";
+import { Collection, Entity, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { ActivityCourseEntity } from "@domain-entities/activity-course/activity-course.entity";
+import { IsString } from "class-validator";
 
 @Entity({ tableName: "Activity" })
 export class ActivityEntity {
@@ -10,24 +9,49 @@ export class ActivityEntity {
   id: number;
 
   @Property()
-  activityName: string;
+  title: string;
+
+  @Property({type: 'text'})
+  description: string;
+
+  @Property({ type: "text", nullable: true })
+  type_receivable: "DOCUMENT" | "TEST" | "NORMAL" | null;
 
   @Property({ type: "text" })
-  activityDescription: string;
+  type_qualification: "SCORE" | "NORMAL";
 
-  @Property()
-  activityDate: Date;
+  @Property({ nullable: true })
+  score_accept: number;
 
-  @ManyToOne(() => CourseEntity)
-  course: CourseEntity;
+  @Property({ type: "json", nullable: true })
+  config_test: JSON | string | null;
 
-  @OneToMany(() => GradeEntity, grade => grade.activity)
-  grades = new Collection<GradeEntity>(this);
+  @Property({ type: "json", nullable: true })
+  config_doc: JSON | string | null;
 
-  @ManyToMany(() => StudentEntity, student => student.activities)
-  students = new Collection<StudentEntity>(this);
+  @Property({ type: "json", nullable: true })
+  sections: JSON | string | null;
+
+  @Property({ type: "json", nullable: true })
+  material_help: JSON | string | null;
+
+  @OneToMany(() => ActivityCourseEntity, activityCourse => activityCourse.activity)
+  activities_courses = new Collection<ActivityCourseEntity>(this);
+
+  @Property({ onCreate: () => new Date(), nullable: true })
+  created_at: Date;
+
+  @Property({ onCreate: () => new Date(), onUpdate: () => new Date(), nullable: true })
+  updated_at: Date;
 
 }
 
 export class ActivityCreateDto {
+
+  @IsString()
+  title: string;
+
+  @IsString()
+  description: string;
+
 }

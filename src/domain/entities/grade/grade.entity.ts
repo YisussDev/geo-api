@@ -17,9 +17,6 @@ export class GradeEntity {
   @ManyToOne(() => StudentEntity)
   student: StudentEntity;
 
-  @ManyToOne(() => ActivityEntity)
-  activity: ActivityEntity;
-
 }
 
 export class GradeCreateDto {

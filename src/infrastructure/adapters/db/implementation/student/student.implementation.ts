@@ -9,6 +9,7 @@ import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { CourseEntity } from "@domain-entities/course/course.entity";
 import { EnrollmentEntity } from "@domain-entities/enrollment/enrollment.entity";
 import { MikroQueryService } from "@core-services/mikro/mikro-queries.service";
+import { ActivityCourseStudentEntity } from "@domain-entities/activity-course-student/activity-course-student.entity";
 
 @Injectable()
 export class StudentImplementation implements StudentRepository {
@@ -71,7 +72,7 @@ export class StudentImplementation implements StudentRepository {
       throw new NotFoundException("Student not active or validated.");
     }
 
-    const course = await this.em.findOne(CourseEntity, courseId);
+    const course = await this.em.findOne(CourseEntity, courseId, { populate: ["activities_courses"] });
     if (!course) {
       throw new NotFoundException("Course not found");
     }
@@ -81,6 +82,17 @@ export class StudentImplementation implements StudentRepository {
       throw new ConflictException("Student is already enrolled in this course");
     }
 
+
+    for (const activityCourse of course.activities_courses) {
+      const activityCourseStudent = new ActivityCourseStudentEntity();
+      activityCourseStudent.activity_course = activityCourse;
+      activityCourseStudent.student = student;
+      activityCourseStudent.status = "ACTIVE";
+      activityCourseStudent.qualification = 0;
+      activityCourseStudent.receivable = "";
+      await this.em.persist(activityCourseStudent);
+    }
+
     const enrollment = new EnrollmentEntity();
     enrollment.course = course;
     enrollment.student = student;
@@ -88,7 +100,41 @@ export class StudentImplementation implements StudentRepository {
     enrollment.status = "ACTIVE";
     enrollment.status_course = "NOT_APPROVED";
 
-    await this.em.persistAndFlush(enrollment);
+    await this.em.persist(enrollment);
+
+    await this.em.flush();
+
+    return { data: student };
+  }
+
+  public async removeStudentInCourse(studentId: number, courseId: number): Promise<{ data: StudentEntity }> {
+
+    const student = await this.em.findOne(StudentEntity, studentId, { populate: ["enrollments", "account"] });
+    if (!student) {
+      throw new NotFoundException("Student not found");
+    }
+
+    const course = await this.em.findOne(CourseEntity, courseId, { populate: ["activities_courses"] });
+    if (!course) {
+      throw new NotFoundException("Course not found");
+    }
+
+    const existingEnrollment = await this.em.findOne(EnrollmentEntity, { student, course });
+    if (!existingEnrollment) {
+      throw new ConflictException("Student is not already enrolled in this course");
+    }
+
+    for (const activityCourse of course.activities_courses) {
+      const activityCourseStudent = await this.em.findOne(ActivityCourseStudentEntity, {
+        student,
+        activity_course: activityCourse
+      });
+      await this.em.remove(activityCourseStudent);
+    }
+
+    await this.em.remove(existingEnrollment);
+
+    await this.em.flush();
 
     return { data: student };
   }

@@ -6,13 +6,19 @@ import { GradeModule } from "./presentation/controllers/grade/grade/grade.module
 import { ActivityModule } from "./presentation/controllers/activity/activity/activity.module";
 import { AccountModule } from "./presentation/controllers/account/account/account.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import {PostgreSqlDriver } from "@mikro-orm/postgresql";
+import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { JwtModule } from "@nestjs/jwt";
 import { WinstonModule } from "nest-winston";
 import * as winston from "winston";
 import { LoggingInterceptor } from "./core/interceptors/logger/logging.interceptor";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { EnrollmentModule } from "./presentation/controllers/enrollment/enrollment/enrollment.module";
+import {
+  ActivityCourseModule
+} from "./presentation/controllers/activity-course/activity-course/activity-course.module";
+import {
+  ActivityCourseStudentModule
+} from "./presentation/controllers/activity-course-student/activity-course-student/activity-course-student.module";
 
 
 @Module({
@@ -23,8 +29,8 @@ import { EnrollmentModule } from "./presentation/controllers/enrollment/enrollme
     }),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET || 'default_secret_key',
-      signOptions: { expiresIn: process.env.JWT_EXPIRATION_TIME || '1m' },
+      secret: process.env.JWT_SECRET || "default_secret_key",
+      signOptions: { expiresIn: process.env.JWT_EXPIRATION_TIME || "1m" }
     }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -56,25 +62,27 @@ import { EnrollmentModule } from "./presentation/controllers/enrollment/enrollme
             winston.format.errors({ stack: true }),
             winston.format.printf(({ timestamp, level, message, stack }) => {
               return `${timestamp} ${level}: ${message} - ${stack}`;
-            }),
-          ),
+            })
+          )
         }),
         new winston.transports.File({
-          filename: 'src/logs/application.log',
+          filename: "src/logs/application.log",
           format: winston.format.combine(
             winston.format.timestamp(),
             winston.format.errors({ stack: true }),
             winston.format.json()
-          ),
-        }),
-      ],
+          )
+        })
+      ]
     }),
+    ActivityCourseStudentModule,
+    ActivityCourseModule,
     AccountModule,
     StudentModule,
     CourseModule,
     GradeModule,
     ActivityModule,
-    EnrollmentModule
+    EnrollmentModule,
   ],
   controllers: [],
   providers: [
