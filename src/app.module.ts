@@ -51,6 +51,12 @@ import {
           transactional: true,
           disableForeignKeys: false,
           emit: "ts"
+        },
+        filters: {
+          noDeleted: {
+            cond: { deletedAt: null },
+            default: true
+          }
         }
       })
     }),
@@ -82,7 +88,7 @@ import {
     CourseModule,
     GradeModule,
     ActivityModule,
-    EnrollmentModule,
+    EnrollmentModule
   ],
   controllers: [],
   providers: [

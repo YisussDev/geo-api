@@ -1,4 +1,4 @@
-import { Collection, Entity, ManyToMany, OneToMany, OneToOne, PrimaryKey } from "@mikro-orm/core";
+import { Collection, Entity, ManyToMany, OneToMany, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { GradeEntity } from "@domain-entities/grade/grade.entity";
 import { ActivityEntity } from "@domain-entities/activity/activity.entity";
 import { AccountEntity } from "@domain-entities/account/account.entity";
@@ -18,6 +18,9 @@ export class StudentEntity {
 
   @OneToMany(() => EnrollmentEntity, enrollment => enrollment.student)
   enrollments = new Collection<EnrollmentEntity>(this);
+
+  @Property({ nullable: true })
+  deletedAt?: Date;
 
 }
 

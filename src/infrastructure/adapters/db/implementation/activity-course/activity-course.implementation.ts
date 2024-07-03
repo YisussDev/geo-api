@@ -104,7 +104,7 @@ export class ActivityCourseImplementation implements ActivityCourseRepository {
       const activityCourseStudent = new ActivityCourseStudentEntity();
       activityCourseStudent.activity_course = activityCourse;
       activityCourseStudent.student = enrollment.student;
-      activityCourseStudent.status = "ACTIVE";
+      activityCourseStudent.status = "PENDING";
       activityCourseStudent.qualification = 0;
       activityCourseStudent.receivable = "";
       await this.em.persist(activityCourseStudent);
@@ -145,16 +145,14 @@ export class ActivityCourseImplementation implements ActivityCourseRepository {
     const enrollments = await this.em.find(EnrollmentEntity, { course: course }, { populate: ["student"] });
 
     for (const enrollment of enrollments) {
-      const activityCourseStudent = await this.em.findOne(ActivityCourseStudentEntity, {
+      const activityCourseStudentFounded = await this.em.findOne(ActivityCourseStudentEntity, {
         activity_course: existActivityInCourse,
         student: enrollment.student
       });
-      await this.em.remove(activityCourseStudent);
+      await this.em.nativeDelete(ActivityCourseStudentEntity, activityCourseStudentFounded);
     }
 
-    await this.em.remove(existActivityInCourse);
-
-
+    await this.em.nativeDelete(ActivityCourseEntity, existActivityInCourse);
     await this.em.flush();
 
     return {

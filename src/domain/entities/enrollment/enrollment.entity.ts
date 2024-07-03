@@ -21,13 +21,16 @@ export class EnrollmentEntity {
   status: "ACTIVE" | "INACTIVE";
 
   @Property()
-  status_course: "NOT_APPROVED" | "APPROVED";
+  status_course: "UNAPPROVED" | "APPROVED";
 
   @Property({ onCreate: () => new Date(), nullable: true })
   start_enrollment: Date;
 
   @Property({ nullable: true })
   end_enrollment: Date;
+
+  @Property({ nullable: true })
+  deletedAt?: Date;
 }
 
 export class EnrollmentCreateDto {

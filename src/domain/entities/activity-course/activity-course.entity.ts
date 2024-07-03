@@ -26,6 +26,9 @@ export class ActivityCourseEntity {
   @ManyToOne(()=> CourseEntity)
   course: CourseEntity
 
+  @Property({ nullable: true })
+  deletedAt?: Date;
+
 }
 
 export class ActivityCourseCreateDto {

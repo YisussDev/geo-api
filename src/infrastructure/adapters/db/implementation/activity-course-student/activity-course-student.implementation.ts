@@ -74,5 +74,92 @@ export class ActivityCourseStudentImplementation implements ActivityCourseStuden
     };
   }
 
+  public async getMyActivitiesByCourse(headers: any, idCourse: string): Promise<{
+    data: ActivityCourseStudentEntity[]
+  }> {
+
+    const [type, token] = headers["authorization"].split(" ") ?? [];
+    const tokenDecoded = await this.jwtService.verify(token);
+
+    const student = await this.em.findOne(StudentEntity, Number(tokenDecoded.student.id));
+
+    if (!student) throw new BadRequestException("Student does not exist");
+
+    const course = await this.em.findOne(CourseEntity, Number(idCourse));
+
+    if (!course) throw new BadRequestException("Course does not exist");
+
+    const activityCourseStudent = await this.repository.find({
+        activity_course: {
+          course: {
+            id: Number(idCourse)
+          }
+        },
+        student: student
+      },
+      {
+        populate: ["activity_course.course", "student", "activity_course.activity"]
+      }
+    );
+
+    return {
+      data: activityCourseStudent
+    };
+  }
+
+  public async approvedActivityCourseStudent(idActivityCourseStudent: string): Promise<{
+    data: ActivityCourseStudentEntity
+  }> {
+
+    const activityCourseStudent = await this.em.findOne(ActivityCourseStudentEntity, Number(idActivityCourseStudent));
+
+    if (!activityCourseStudent) throw new BadRequestException("Activity does not exist");
+
+    activityCourseStudent.status = "APPROVED";
+
+    await this.em.flush();
+
+    return {
+      data: activityCourseStudent
+    };
+
+  }
+
+  public async unapprovedActivityCourseStudent(idActivityCourseStudent: string): Promise<{
+    data: ActivityCourseStudentEntity
+  }> {
+
+    const activityCourseStudent = await this.em.findOne(ActivityCourseStudentEntity, Number(idActivityCourseStudent));
+
+    if (!activityCourseStudent) throw new BadRequestException("Activity does not exist");
+
+    activityCourseStudent.status = "UNAPPROVED";
+
+    await this.em.flush();
+
+    return {
+      data: activityCourseStudent
+    };
+
+  }
+
+  public async pendingActivityCourseStudent(idActivityCourseStudent: string): Promise<{
+    data: ActivityCourseStudentEntity
+  }> {
+
+    const activityCourseStudent = await this.em.findOne(ActivityCourseStudentEntity, Number(idActivityCourseStudent));
+
+    if (!activityCourseStudent) throw new BadRequestException("Activity does not exist");
+
+    activityCourseStudent.status = "PENDING";
+
+    await this.em.flush();
+
+    return {
+      data: activityCourseStudent
+    };
+
+  }
+
 
 }

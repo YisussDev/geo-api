@@ -28,6 +28,8 @@ export class CourseController {
     return this.useCases.getAll(filter, request.query.page);
   }
 
+  @ActionName("SEARCH")
+  @UseGuards(AuthGuard, ModuleGuard, ValidationGuard)
   @Get("search")
   public getOne(
     @Req() request: any,
@@ -59,6 +61,7 @@ export class CourseController {
     return this.useCases.updateOne(id, data);
   }
 
+  @ActionName("DELETE")
   @UseGuards(AuthGuard, ValidationGuard)
   @Delete(":id")
   public async delete(

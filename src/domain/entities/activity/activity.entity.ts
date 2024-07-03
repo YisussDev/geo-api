@@ -44,6 +44,9 @@ export class ActivityEntity {
   @Property({ onCreate: () => new Date(), onUpdate: () => new Date(), nullable: true })
   updated_at: Date;
 
+  @Property({ nullable: true })
+  deletedAt?: Date;
+
 }
 
 export class ActivityCreateDto {

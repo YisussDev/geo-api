@@ -7,13 +7,15 @@ export interface ActivityCourseStudentApiEntity {
 
   qualification: number;
 
-  status: "ACTIVE" | "INACTIVE";
+  status: "APPROVED" | "UNAPPROVED" | "PENDING";
 
   receivable: JSON;
 
   qualification_test: JSON;
 
   activity_course: ActivityCourseEntity;
+
+  activity_course_id: number;
 
   student: StudentEntity;
 

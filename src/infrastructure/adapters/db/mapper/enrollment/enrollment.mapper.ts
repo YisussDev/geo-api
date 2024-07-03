@@ -5,11 +5,11 @@ import { EnrollmentApiEntity } from "../../models/enrollment/enrollment-api.mode
 export class EnrollmentMapper extends BaseMapperModel<EnrollmentEntity, EnrollmentApiEntity> {
 
   public mapFrom(entityApi: EnrollmentApiEntity): EnrollmentEntity {
-    return entityApi as any;
+    return entityApi;
   }
 
   public mapTo(entityLocal: EnrollmentEntity): EnrollmentApiEntity {
-    return entityLocal as any;
+    return entityLocal;
   }
 
 }

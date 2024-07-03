@@ -30,7 +30,7 @@ import { createAddNameMiddleware } from "../../../../core/middlewares/name-modul
 export class ActivityCourseModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(createAddNameMiddleware("ActivityCourse"))
+      .apply(createAddNameMiddleware("ACTIVITY_COURSE"))
       .forRoutes(ActivityCourseController);
   }
 }

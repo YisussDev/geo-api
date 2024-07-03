@@ -12,7 +12,7 @@ export class ActivityCourseStudentEntity {
   qualification: number;
 
   @Property()
-  status: "ACTIVE" | "INACTIVE";
+  status: "APPROVED" | "UNAPPROVED" | "PENDING";
 
   @Property({ type: "json", nullable: true })
   receivable: any;
@@ -23,8 +23,13 @@ export class ActivityCourseStudentEntity {
   @ManyToOne(() => ActivityCourseEntity)
   activity_course: ActivityCourseEntity;
 
+  activity_course_id: number;
+
   @ManyToOne(() => StudentEntity)
   student: StudentEntity;
+
+  @Property({ nullable: true })
+  deletedAt?: Date;
 
 }
 

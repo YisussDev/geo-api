@@ -17,6 +17,9 @@ export class GradeEntity {
   @ManyToOne(() => StudentEntity)
   student: StudentEntity;
 
+  @Property({ nullable: true })
+  deletedAt?: Date;
+
 }
 
 export class GradeCreateDto {

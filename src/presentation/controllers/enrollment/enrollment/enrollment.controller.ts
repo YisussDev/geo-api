@@ -22,6 +22,22 @@ export class EnrollmentController {
     return this.useCases.getAll(filter, request.query.page);
   }
 
+  @Get("approved/:idStudent/:idCourse")
+  public approvedStudent(
+    @Param("idStudent") idStudent: string,
+    @Param("idCourse") idCourse: string
+  ): Promise<{ data: EnrollmentEntity }> {
+    return this.useCases.approvedStudent(idStudent, idCourse);
+  }
+
+  @Get("unapproved/:idStudent/:idCourse")
+  public unapprovedStudent(
+    @Param("idStudent") idStudent: string,
+    @Param("idCourse") idCourse: string
+  ): Promise<{ data: EnrollmentEntity }> {
+    return this.useCases.unapprovedStudent(idStudent, idCourse);
+  }
+
   @Get("my-enrollments")
   public getMyEnrollments(
     @Headers() headers: any

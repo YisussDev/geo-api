@@ -87,7 +87,7 @@ export class StudentImplementation implements StudentRepository {
       const activityCourseStudent = new ActivityCourseStudentEntity();
       activityCourseStudent.activity_course = activityCourse;
       activityCourseStudent.student = student;
-      activityCourseStudent.status = "ACTIVE";
+      activityCourseStudent.status = "PENDING";
       activityCourseStudent.qualification = 0;
       activityCourseStudent.receivable = "";
       await this.em.persist(activityCourseStudent);
@@ -98,7 +98,7 @@ export class StudentImplementation implements StudentRepository {
     enrollment.student = student;
     enrollment.grade = 0;
     enrollment.status = "ACTIVE";
-    enrollment.status_course = "NOT_APPROVED";
+    enrollment.status_course = "UNAPPROVED";
 
     await this.em.persist(enrollment);
 
@@ -129,10 +129,10 @@ export class StudentImplementation implements StudentRepository {
         student,
         activity_course: activityCourse
       });
-      await this.em.remove(activityCourseStudent);
+      await this.em.nativeDelete(ActivityCourseStudentEntity, activityCourseStudent);
     }
 
-    await this.em.remove(existingEnrollment);
+    await this.em.nativeDelete(EnrollmentEntity, existingEnrollment);
 
     await this.em.flush();
 

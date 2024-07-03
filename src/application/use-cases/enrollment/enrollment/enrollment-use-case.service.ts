@@ -24,6 +24,14 @@ export class EnrollmentUseCaseService implements EnrollmentRepository {
     return this.implementation.getMyEnrollments(headers);
   }
 
+  public approvedStudent(idStudent: string, idCourse: string): Promise<{ data: EnrollmentEntity }> {
+    return this.implementation.approvedStudent(idStudent, idCourse);
+  }
+
+  public unapprovedStudent(idStudent: string, idCourse: string): Promise<{ data: EnrollmentEntity }> {
+    return this.implementation.unapprovedStudent(idStudent, idCourse);
+  }
+
   public create(data: EnrollmentCreateDto): Promise<{ data: EnrollmentEntity }> {
     return this.implementation.create(data);
   }

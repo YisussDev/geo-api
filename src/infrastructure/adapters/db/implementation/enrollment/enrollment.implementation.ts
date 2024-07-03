@@ -9,6 +9,8 @@ import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { BcryptService } from "@core-services/bcrypt/bcryp.service";
 import { JwtService } from "@nestjs/jwt";
 import { MikroQueryService } from "@core-services/mikro/mikro-queries.service";
+import { StudentEntity } from "@domain-entities/student/student.entity";
+import { CourseEntity } from "@domain-entities/course/course.entity";
 
 @Injectable()
 export class EnrollmentImplementation implements EnrollmentRepository {
@@ -52,6 +54,52 @@ export class EnrollmentImplementation implements EnrollmentRepository {
     return {
       data: newObject
     };
+  }
+
+  public async approvedStudent(idStudent: string, idCourse: string): Promise<{ data: EnrollmentEntity }> {
+
+    const student = await this.em.findOne(StudentEntity, { id: Number(idStudent) });
+    if (!student) throw new NotFoundException(`Student with id ${idStudent} not found`);
+
+    const course = await this.em.findOne(CourseEntity, { id: Number(idCourse) });
+    if (!course) throw new NotFoundException(`Course with id ${idStudent} not found`);
+
+    const enrollment = await this.em.findOne(EnrollmentEntity, { student, course });
+
+    if (!enrollment) throw new NotFoundException(`Student with id ${idStudent} not enrollment in course.`);
+
+    enrollment.status_course = "APPROVED";
+    enrollment.status = "INACTIVE";
+
+    await this.em.flush();
+
+    return {
+      data: enrollment
+    };
+
+  }
+
+  public async unapprovedStudent(idStudent: string, idCourse: string): Promise<{ data: EnrollmentEntity }> {
+
+    const student = await this.em.findOne(StudentEntity, { id: Number(idStudent) });
+    if (!student) throw new NotFoundException(`Student with id ${idStudent} not found`);
+
+    const course = await this.em.findOne(CourseEntity, { id: Number(idCourse) });
+    if (!course) throw new NotFoundException(`Course with id ${idStudent} not found`);
+
+    const enrollment = await this.em.findOne(EnrollmentEntity, { student, course });
+
+    if (!enrollment) throw new NotFoundException(`Student with id ${idStudent} not enrollment in course.`);
+
+    enrollment.status_course = "UNAPPROVED";
+    enrollment.status = "INACTIVE";
+
+    await this.em.flush();
+
+    return {
+      data: enrollment
+    };
+
   }
 
   public async deleteOne(id: string): Promise<{ data: EnrollmentEntity }> {

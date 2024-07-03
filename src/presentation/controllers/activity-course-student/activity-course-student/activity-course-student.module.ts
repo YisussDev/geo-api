@@ -1,7 +1,11 @@
 import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ActivityCourseStudentController } from "./activity-course-student.controller";
-import { ActivityCourseStudentImplementation } from "../../../../infrastructure/adapters/db/implementation/activity-course-student/activity-course-student.implementation";
-import { ActivityCourseStudentUseCaseService } from "@application-use-cases/activity-course-student/activity-course-student/activity-course-student-use-case.service";
+import {
+  ActivityCourseStudentImplementation
+} from "../../../../infrastructure/adapters/db/implementation/activity-course-student/activity-course-student.implementation";
+import {
+  ActivityCourseStudentUseCaseService
+} from "@application-use-cases/activity-course-student/activity-course-student/activity-course-student-use-case.service";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ActivityCourseStudentEntity } from "@domain-entities/activity-course-student/activity-course-student.entity";
 import { BcryptService } from "@core-services/bcrypt/bcryp.service";
@@ -11,22 +15,22 @@ import { createAddNameMiddleware } from "../../../../core/middlewares/name-modul
 
 @Module({
   imports: [
-   MikroOrmModule.forFeature([ActivityCourseStudentEntity])
+    MikroOrmModule.forFeature([ActivityCourseStudentEntity])
   ],
   controllers: [
-   ActivityCourseStudentController
+    ActivityCourseStudentController
   ],
   providers: [
-   BcryptService,
-   ActivityCourseStudentImplementation,
-   ActivityCourseStudentUseCaseService,
-   MikroQueryService
+    BcryptService,
+    ActivityCourseStudentImplementation,
+    ActivityCourseStudentUseCaseService,
+    MikroQueryService
   ]
 })
 export class ActivityCourseStudentModule {
-configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(createAddNameMiddleware(""))
+      .apply(createAddNameMiddleware("ACTIVITY_COURSE_STUDENT"))
       .forRoutes(ActivityCourseStudentController);
   }
 }

@@ -57,6 +57,9 @@ export class AccountEntity {
   @Property({ type: "tinyint" })
   validated: 0 | 1;
 
+  @Property({ nullable: true })
+  deletedAt?: Date;
+
 }
 
 export class AccountCreateDto {

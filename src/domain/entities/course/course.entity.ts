@@ -34,6 +34,9 @@ export class CourseEntity {
   @OneToMany(() => ActivityCourseEntity, activityCourse => activityCourse.course)
   activities_courses = new Collection<ActivityCourseEntity>(this);
 
+  @Property({ nullable: true })
+  deletedAt?: Date;
+
 }
 
 export class CourseCreateDto {
