@@ -19,6 +19,7 @@ import {
 import {
   ActivityCourseStudentModule
 } from "./presentation/controllers/activity-course-student/activity-course-student/activity-course-student.module";
+import { CertifiedModule } from "./presentation/controllers/certified/certified/certified.module";
 
 
 @Module({
@@ -88,7 +89,8 @@ import {
     CourseModule,
     GradeModule,
     ActivityModule,
-    EnrollmentModule
+    EnrollmentModule,
+    CertifiedModule
   ],
   controllers: [],
   providers: [

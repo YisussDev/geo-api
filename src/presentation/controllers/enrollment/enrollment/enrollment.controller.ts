@@ -3,6 +3,7 @@ import { EnrollmentUseCaseService } from "@application-use-cases/enrollment/enro
 import { EnrollmentCreateDto, EnrollmentEntity } from "@domain-entities/enrollment/enrollment.entity";
 import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
 import { FilterInterface } from "@core-interfaces/filter/filter.interface";
+import { CourseEntity } from "@domain-entities/course/course.entity";
 
 @Controller("enrollment")
 export class EnrollmentController {
@@ -20,6 +21,16 @@ export class EnrollmentController {
     let filter: FilterInterface = {};
     if (headers["x-filter-model"]) filter = JSON.parse(headers["x-filter-model"]);
     return this.useCases.getAll(filter, request.query.page);
+  }
+
+  @Get("search")
+  public getOne(
+    @Req() request: any,
+    @Headers() headers: any,
+  ): Promise<{ data: EnrollmentEntity }> {
+    let filterJson: string | undefined = headers["x-filter-model"];
+    let filter: FilterInterface = filterJson && JSON.parse(filterJson);
+    return this.useCases.getOne(filter);
   }
 
   @Get("approved/:idStudent/:idCourse")
@@ -43,6 +54,13 @@ export class EnrollmentController {
     @Headers() headers: any
   ): Promise<{ data: EnrollmentEntity[] }> {
     return this.useCases.getMyEnrollments(headers);
+  }
+
+  @Get("my-certifieds")
+  public getMyCertified(
+    @Headers() headers: any
+  ): Promise<{ data: EnrollmentEntity[] }> {
+    return this.useCases.getMyCertified(headers);
   }
 
   @Post("")

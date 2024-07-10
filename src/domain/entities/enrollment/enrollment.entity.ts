@@ -1,6 +1,7 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { CourseEntity } from "@domain-entities/course/course.entity";
 import { StudentEntity } from "@domain-entities/student/student.entity";
+import { CertifiedEntity } from "@domain-entities/certified/certified.entity";
 
 @Entity({ tableName: "Enrollment" })
 export class EnrollmentEntity {
@@ -31,6 +32,10 @@ export class EnrollmentEntity {
 
   @Property({ nullable: true })
   deletedAt?: Date;
+
+  @OneToOne(() => CertifiedEntity, { nullable: true })
+  certified: CertifiedEntity;
+
 }
 
 export class EnrollmentCreateDto {

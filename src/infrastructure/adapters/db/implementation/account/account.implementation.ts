@@ -46,6 +46,8 @@ export class AccountImplementation implements AccountRepository {
 
     let relations = filter["relations"];
 
+    let fields = filter["fields"];
+
     let queriesToFilter = {};
 
     let options = {};
@@ -55,6 +57,8 @@ export class AccountImplementation implements AccountRepository {
     }
 
     if (relations) options["populate"] = relations;
+
+    if (fields) options["fields"] = fields;
 
     const account = await this.em.findOne(AccountEntity, queriesToFilter, options);
 

@@ -20,8 +20,16 @@ export class EnrollmentUseCaseService implements EnrollmentRepository {
     return this.implementation.getAll(filter, page);
   }
 
+  public getOne(filter: FilterInterface): Promise<{ data: EnrollmentEntity }> {
+    return this.implementation.getOne(filter);
+  }
+
   public getMyEnrollments(headers: any): Promise<{ data: EnrollmentEntity[] }> {
     return this.implementation.getMyEnrollments(headers);
+  }
+
+  public getMyCertified(headers: any): Promise<{ data: EnrollmentEntity[] }> {
+    return this.implementation.getMyCertified(headers);
   }
 
   public approvedStudent(idStudent: string, idCourse: string): Promise<{ data: EnrollmentEntity }> {

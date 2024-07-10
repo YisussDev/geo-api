@@ -4,11 +4,8 @@ import { ActivityCourseMapper } from "../../mapper/activity-course/activity-cour
 import { FilterInterface } from "@core-interfaces/filter/filter.interface";
 import { HttpResponseInterface } from "@core-interfaces/http/http-response.interface";
 import { ActivityCourseCreateDto, ActivityCourseEntity } from "@domain-entities/activity-course/activity-course.entity";
-import { constructQuery } from "@core-helpers/query/queries.helper";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/core";
-import { BcryptService } from "@core-services/bcrypt/bcryp.service";
-import { JwtService } from "@nestjs/jwt";
 import { MikroQueryService } from "@core-services/mikro/mikro-queries.service";
 import { ActivityEntity } from "@domain-entities/activity/activity.entity";
 import { CourseEntity } from "@domain-entities/course/course.entity";
@@ -22,10 +19,8 @@ export class ActivityCourseImplementation implements ActivityCourseRepository {
   private mapper = new ActivityCourseMapper();
 
   constructor(
-    private jwtService: JwtService,
     @InjectRepository(ActivityCourseEntity) private readonly repository: EntityRepository<ActivityCourseEntity>,
     private readonly em: EntityManager,
-    private bcryptService: BcryptService,
     private mikroQueryService: MikroQueryService
   ) {
   }

@@ -43,6 +43,8 @@ export class CourseImplementation implements CourseRepository {
 
     let relations = filter["relations"];
 
+    let fields = filter["fields"];
+
     let queriesToFilter = {};
 
     let options = {};
@@ -52,6 +54,8 @@ export class CourseImplementation implements CourseRepository {
     }
 
     if (relations) options["populate"] = relations;
+
+    if (fields) options["fields"] = fields;
 
     const course = await this.em.findOne(CourseEntity, queriesToFilter, options);
 
