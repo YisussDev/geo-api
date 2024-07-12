@@ -36,6 +36,9 @@ export class AccountEntity {
   @Property()
   password: string;
 
+  @Property({ nullable: true })
+  verify_token: string;
+
   @Enum(() => AccountRole)
   rol: string;
 

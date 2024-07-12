@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenido a GEO</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+      }
+
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          background-color: #f9f9f9;
+      }
+
+      .header {
+          text-align: center;
+          margin-bottom: 20px;
+      }
+
+      .header img {
+          max-width: 100px;
+      }
+
+      .content {
+          margin-bottom: 20px;
+      }
+
+      .button {
+          display: inline-block;
+          padding: 10px 20px;
+          color: #fff !important;
+          background-color: #007bff;
+          text-decoration: none;
+          border-radius: 5px;
+          text-align: center;
+      }
+
+      .footer {
+          text-align: center;
+          margin-top: 20px;
+          font-size: 12px;
+          color: #777;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <img src="cid:logo_geo" alt="Logo de la Plataforma">
+    <h1>¡Bienvenido(a) a GEO!</h1>
+  </div>
+  <div class="content">
+    <p>Hola {{names}},</p>
+    <p>Nos complace darte la bienvenida a GEO, tu nuevo espacio para aprender y crecer. Estamos encantados de que te
+      unas a nuestra comunidad de estudiantes y profesionales comprometidos con el aprendizaje continuo.</p>
+    <p>En GEO, encontrarás una amplia variedad de cursos diseñados para ayudarte a alcanzar tus metas académicas y
+      profesionales. Nuestra plataforma está diseñada para ser fácil de usar y accesible desde cualquier dispositivo,
+      para que puedas aprender a tu propio ritmo y en tu propio tiempo.</p>
+    <p>Estos son tus próximos pasos:</p>
+    <ul>
+      <li>Para verificar tu cuenta <a href="http://localhost:4200/home/validation/token/{{token}}" class="button">¡Haz Clic
+        Aquí!</a>.
+      </li>
+      <li>Completa tu perfil para personalizar tu experiencia de aprendizaje.</li>
+      <li>Únete a nuestros foros de discusión para conectar con otros estudiantes y profesores.</li>
+    </ul>
+    <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos a través de nuestro <a
+      href="https://example.com/soporte" target="_blank">centro de soporte</a>.</p>
+    <p>Estamos aquí para apoyarte en cada paso de tu viaje de aprendizaje.</p>
+  </div>
+  <div class="footer">
+    <p>&copy; 2024 GEO. Todos los derechos reservados.</p>
+  </div>
+</div>
+</body>
+</html>

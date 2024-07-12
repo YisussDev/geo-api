@@ -17,5 +17,6 @@ export interface AccountApiEntity {
   updated_at: Date;
   img_64: Record<string, any>;
   status: "ACTIVE" | "INACTIVE";
+  verify_token: string;
   validated: 0 | 1;
 }

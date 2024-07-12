@@ -23,7 +23,6 @@ export class MikroORMErrorInterceptor implements NestInterceptor {
           return throwError(() => new HttpException(err.message, err.getStatus()));
         } else {
           // Manejar errores no controlados
-          console.log(err.detail);
           return throwError(() => new InternalServerErrorException(`${err.detail}`));
         }
       })

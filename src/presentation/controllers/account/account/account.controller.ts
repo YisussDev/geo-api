@@ -133,6 +133,13 @@ export class AccountController {
     return this.useCases.validateAccountRegister(id);
   }
 
+  @Get("validate-account-token/:token")
+  public async validateAccountWithToken(
+    @Param("token") token: string
+  ): Promise<{ data: AccountEntity }> {
+    return this.useCases.validateAccountWithToken(token);
+  }
+
   @ActionName("ACTIVE_OR_INACTIVE")
   @UseGuards(AuthGuard, ModuleGuard, ValidationGuard)
   @Get("act-deact/:id")

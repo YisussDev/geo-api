@@ -35,7 +35,7 @@ export class HttpErrorInterceptor implements NestInterceptor {
           }));
         }
 
-        if(err['name'] && (err['name'] == "JsonWebTokenError")){
+        if (err["name"] && (err["name"] == "JsonWebTokenError")) {
           return throwError(() => new BadRequestException({
             statusCode: 400,
             detail: "Error en la autenticación.",

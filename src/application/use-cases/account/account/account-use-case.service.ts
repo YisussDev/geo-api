@@ -62,6 +62,10 @@ export class AccountUseCaseService implements AccountRepository {
     return this.implementation.validateAccountRegister(id);
   }
 
+  public validateAccountWithToken(token: string): Promise<{ data: AccountEntity }> {
+    return this.implementation.validateAccountWithToken(token);
+  }
+
   public activateOrDeactivateAccount(id: string): Promise<{ data: AccountEntity }> {
     return this.implementation.activateOrDeactivateAccount(id);
   }

@@ -58,6 +58,10 @@ import { CertifiedModule } from "./presentation/controllers/certified/certified/
             cond: { deletedAt: null },
             default: true
           }
+        },
+        pool: {
+          min: 2,
+          max: 5
         }
       })
     }),

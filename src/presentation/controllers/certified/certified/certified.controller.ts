@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Res } from "@nestjs/common";
 import { CertifiedUseCaseService } from "@application-use-cases/certified/certified/certified-use-case.service";
 import { Response } from "express";
-import * as fs from 'fs';
+import * as fs from "fs";
 
 @Controller("certified")
 export class CertifiedController {
@@ -18,8 +18,6 @@ export class CertifiedController {
   ): Promise<void> {
 
     const certifiedFounded = await this.useCases.getCertifiedByToken(tokenCertified);
-
-    console.log(certifiedFounded);
 
     const pdfBuffer = fs.readFileSync(certifiedFounded.path);
 

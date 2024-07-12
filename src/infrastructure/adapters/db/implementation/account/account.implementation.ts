@@ -11,6 +11,8 @@ import { BcryptService } from "@core-services/bcrypt/bcryp.service";
 import { JwtService } from "@nestjs/jwt";
 import { MikroQueryService } from "@core-services/mikro/mikro-queries.service";
 import { modulesDictionaries } from "../../../../../core/dictionaries/modules/modules.dictionaries";
+import { EmailUseCaseService } from "@application-use-cases/email/email/email-use-case.service";
+import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
 export class AccountImplementation implements AccountRepository {
@@ -24,7 +26,8 @@ export class AccountImplementation implements AccountRepository {
     private jwtService: JwtService,
     private readonly em: EntityManager,
     private bcryptService: BcryptService,
-    private mikroQueryService: MikroQueryService
+    private mikroQueryService: MikroQueryService,
+    private emailUseCaseService: EmailUseCaseService
   ) {
   }
 
@@ -90,17 +93,22 @@ export class AccountImplementation implements AccountRepository {
       data.status = "ACTIVE";
       data.validated = 0;
 
-      // Crear una nueva cuenta
+      const token: string = uuidv4();
+
       const newAccount = em.create(AccountEntity, data);
+      newAccount.verify_token = token;
       await em.persistAndFlush(newAccount);
 
-      // Crear un estudiante asociado con la nueva cuenta
       const newStudent = em.create(StudentEntity, { account: newAccount });
-      newAccount.student = newStudent; // Asignar el estudiante a la cuenta
+      newAccount.student = newStudent;
 
-      // Persistir ambos
+
       await em.persistAndFlush(newStudent);
       await em.persistAndFlush(newAccount);
+
+      let namesAccount: string = `${newAccount.first_name} ${newAccount.last_name} ${newAccount.first_surname} ${newAccount.last_surname}`;
+
+      await this.emailUseCaseService.sendEmailRegister("Verificación de cuenta", "¡Bienvenido(a) a GEO!", namesAccount, token, newAccount.email);
 
       return {
         data: newAccount
@@ -146,6 +154,21 @@ export class AccountImplementation implements AccountRepository {
     } else {
       // @ts-ignore
       this.repository.assign(account, { validated: 1 });
+      await this.em.flush();
+      return {
+        data: account
+      };
+    }
+  }
+
+  public async validateAccountWithToken(token: string): Promise<{ data: AccountEntity }> {
+    const account = await this.repository.findOne({ verify_token: token });
+    if (!account) {
+      throw new NotFoundException("Token no válido.");
+    } else {
+      // @ts-ignore
+      this.repository.assign(account, { validated: 1 });
+      this.repository.assign(account, { verify_token: null });
       await this.em.flush();
       return {
         data: account

@@ -9,6 +9,7 @@ import { AccountEntity } from "@domain-entities/account/account.entity";
 import { BcryptService } from "@core-services/bcrypt/bcryp.service";
 import { MikroQueryService } from "@core-services/mikro/mikro-queries.service";
 import { createAddNameMiddleware } from "../../../../core/middlewares/name-module.middleware";
+import { EmailUseCaseService } from "@application-use-cases/email/email/email-use-case.service";
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { createAddNameMiddleware } from "../../../../core/middlewares/name-modul
     BcryptService,
     AccountImplementation,
     AccountUseCaseService,
-    MikroQueryService
+    MikroQueryService,
+    EmailUseCaseService
   ]
 })
 export class AccountModule {
