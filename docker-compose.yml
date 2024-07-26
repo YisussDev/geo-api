@@ -32,7 +32,11 @@ services:
       NAME_DATABASE: postgres
       SECRET_KEY: shgzjxd
       JWT_EXPIRATION_TIME: 2h
+    volumes:
+      - certifieds_data:/app/src/public/certifieds
 
 volumes:
   postgres_data:
+    driver: local
+  certifieds_data:
     driver: local
